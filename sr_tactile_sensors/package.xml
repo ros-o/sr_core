@@ -1,5 +1,5 @@
 <!--
- Copyright 2022 Shadow Robot Company Ltd.
+ Copyright 2022, 2024 Shadow Robot Company Ltd.
  This program is free software: you can redistribute it and/or modify it
  under the terms of the GNU General Public License as published by the Free
  Software Foundation version 2 of the License.
@@ -43,6 +43,10 @@
     <run_depend>sr_robot_msgs</run_depend>
     <run_depend>visualization_msgs</run_depend>
     <run_depend>gazebo_msgs</run_depend>
-    <run_depend>gazebo_ros</run_depend>
+    <run_depend>gazebo_ros</run_depend>    
+
+    <run_depend>plotjuggler</run_depend>
+    <run_depend>plotjuggler_ros</run_depend>
+    <run_depend>plotjuggler_msgs</run_depend>
 
 </package>
