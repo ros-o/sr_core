@@ -40,6 +40,7 @@
     <build_depend>message_generation</build_depend>
     <build_depend>message_runtime</build_depend>
     <build_depend>sr_utilities_common</build_depend>
+    <build_depend>realtime_tools</build_depend>
 
     <!-- Dependencies needed after this package is compiled. -->
     <run_depend>sensor_msgs</run_depend>
@@ -53,6 +54,7 @@
     <run_depend>std_msgs</run_depend>
     <run_depend>message_runtime</run_depend>
     <run_depend>sr_utilities_common</run_depend>
+    <run_depend>realtime_tools</run_depend>
 
     <!-- Dependencies needed only for running tests. -->
     <test_depend>gtest</test_depend>

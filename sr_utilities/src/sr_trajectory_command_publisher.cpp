@@ -60,9 +60,11 @@ void SrTrajectoryCommandPublisher::setup_publishers(const std::vector<std::strin
       if (!create_publisher) continue;
     }
 
-    auto publisher_and_msg = std::make_shared<std::pair<ros::Publisher, trajectory_msgs::JointTrajectory>>(
-        nh.advertise<trajectory_msgs::JointTrajectory>("/" + controller_name + "/command", 1),
-        trajectory_msgs::JointTrajectory());
+    auto publisher_and_msg = std::make_shared<std::pair<realtime_tools::RealtimePublisher<
+      trajectory_msgs::JointTrajectory>, trajectory_msgs::JointTrajectory> >(
+           std::piecewise_construct,
+           std::forward_as_tuple(nh, "/" + controller_name + "/command", 1),
+           std::make_tuple());
 
     for (int k = 0; k < joints.size(); k++)
     {
@@ -109,13 +111,15 @@ std::vector<std::string> SrTrajectoryCommandPublisher::xmlrpcvalue_to_vector(con
 
 void SrTrajectoryCommandPublisher::publish(const trajectory_msgs::JointTrajectory& joint_trajectory)
 {
-  std::unordered_set<std::shared_ptr<std::pair<ros::Publisher,
-    trajectory_msgs::JointTrajectory>>> publishers_and_msgs;
+  std::unordered_set<std::shared_ptr<std::pair<realtime_tools::RealtimePublisher<
+      trajectory_msgs::JointTrajectory>,
+    trajectory_msgs::JointTrajectory> > > publishers_and_msgs;
 
   for (int i = 0; i < joint_trajectory.joint_names.size(); i++)
   {
     std::string joint_name = joint_trajectory.joint_names[i];
-    std::shared_ptr<std::pair<ros::Publisher, trajectory_msgs::JointTrajectory>>
+    std::shared_ptr<std::pair<realtime_tools::RealtimePublisher<
+      trajectory_msgs::JointTrajectory>, trajectory_msgs::JointTrajectory> >
       publisher_and_msg = joint_to_publisher_and_msg_.at(joint_name);
 
     if (publishers_and_msgs.insert(publisher_and_msg).second)
@@ -139,6 +143,11 @@ void SrTrajectoryCommandPublisher::publish(const trajectory_msgs::JointTrajector
 
   for (const auto& publisher_and_msg : publishers_and_msgs)
   {
-    publisher_and_msg->first.publish(publisher_and_msg->second);
+    while (!publisher_and_msg->first.trylock())
+    {
+      // Wait for the lock to be released
+    }
+    publisher_and_msg->first.msg_ = publisher_and_msg->second;
+    publisher_and_msg->first.unlockAndPublish();
   }
 }
