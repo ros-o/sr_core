@@ -86,7 +86,7 @@ void MstArrowPublisher::initialiseMarkers(std::string frame_prefix, float marker
     // scale.z is the head length
     marker.scale.z = marker_scale_z;
     // Make the marker transparent when starting as we are not supposed to touch the sensor
-    marker.color.a = 0;
+    marker.color.a = 0.01;
     marker.pose.orientation.w = 1;
     // Create starting and ending point at the surface of the sensor
     marker.points = std::vector<geometry_msgs::Point>{ zero_point, zero_point };
@@ -194,7 +194,7 @@ void MstArrowPublisher::updateMarkers(const sr_robot_msgs::MST::ConstPtr& sensor
     // If the vector is in the zero dead-band, make sure the corresponding marker becomes transparent (i.e. not visible)
     if (std::all_of(vector_data.begin(), vector_data.end(), [](int sum_vector) { return sum_vector == 0; }))
     {
-      taxel_marker_array_.markers[taxel_index].color.a = 0;
+      taxel_marker_array_.markers[taxel_index].color.a = 0.01;
     }
     // Otherwise display the arrow corresponding to the resulting vector
     else

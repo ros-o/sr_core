@@ -93,7 +93,7 @@ void MstHandArrowPublisher::updateMarkers(const sr_robot_msgs::MST::ConstPtr& se
     // If the vector is in the zero dead-band, make sure the corresponding marker becomes transparent (i.e. not visible)
     if (std::all_of(vector_data.begin(), vector_data.end(), [](int sum_vector) { return sum_vector == 0; }))
     {
-      taxel_marker_array_.markers[taxel_index].color.a = 0;
+      taxel_marker_array_.markers[taxel_index].color.a = 0.01;
     }
     // Otherwise display the arrow corresponding to the resulting vector
     else
